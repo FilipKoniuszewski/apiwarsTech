@@ -1,0 +1,27 @@
+#login-window{
+    display: flex;
+    z-index: 20;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 36vw;
+    height: 40vh;
+    border-radius: 10px;
+    position: absolute;
+    top: 20vh;
+    left: 50%;
+    transform: translate(-50%,0);
+    margin-top: 15px;
+    background-color: rgb(255, 255, 255);
+    font-family: Lato, Helvetica, sans-serif;
+    font-weight: bold;
+}
+#login-window input {
+    margin-bottom: 15px;
+    width: 30vh;
+    height: 5vh;
+}
+#login-window input[type=submit] {
+    border-radius: 5px;
+    width: 10vh;
+}
