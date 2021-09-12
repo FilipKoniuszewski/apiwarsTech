@@ -9,7 +9,6 @@ const dom = {
     },
     fillTable: function (planets) {
         const tbody = document.querySelector('#table tbody');
-
         let htmlContent = ``;
         for (let planet of planets) {
             htmlContent += `<tr>

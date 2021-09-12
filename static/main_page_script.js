@@ -6,25 +6,26 @@ window.addEventListener("load", e=> {
         }
     };
     const dataHandler = {
-        baseUrl: 'https://swapi.dev/api/',
+        // baseUrl: 'https://swapi.dev/api/',
         next: null,
         previous: null,
         getPlanets: function () {
-            return fetch(`${dataHandler.baseUrl}planets/`)
+            return fetch(`https://swapi.dev/api/planets/`)
                 .then(response => response.json())
                 .then((data) => {
                     let output = '';
                     dataHandler.next = data.next;
                     dataHandler.previous = data.previous;
+                    data = formatOutput(data)
                     data.results.forEach(function (planet) {
                         output += `
                     <tr>
                         <td> ${planet.name}</td>
-                        <td> ${planet.diameter} km </td>
+                        <td> ${planet.diameter} </td>
                         <td> ${planet.climate} </td>
                         <td> ${planet.terrain} </td>
-                        <td> ${planet.surface_water}% </td>
-                        <td> ${planet.population} people </td>
+                        <td> ${planet.surface_water} </td>
+                        <td> ${planet.population} </td>
                     </tr>
                     `;
                     });
@@ -36,8 +37,6 @@ window.addEventListener("load", e=> {
                 return fetch(dataHandler.next)
                     .then(response => {
                         const data = response.json();
-                        dataHandler.next = data.next;
-                        dataHandler.previous = data.previous;
                         return data;
                     });
             }
@@ -47,8 +46,6 @@ window.addEventListener("load", e=> {
                 return fetch(dataHandler.previous)
                     .then(response => {
                         const data = response.json();
-                        dataHandler.next = data.next;
-                        dataHandler.previous = data.previous;
                         return data;
                     });
             }
@@ -58,43 +55,63 @@ window.addEventListener("load", e=> {
             const previousButton = document.querySelector('#btn-prev');
             nextButton.addEventListener("click", e => {
                 dataHandler.getNextPlanets()
-                    .then(function(data) {
+                    .then(function (data) {
+                        dataHandler.next = data.next;
+                        dataHandler.previous = data.previous;
                         let output = ''
+                        data = formatOutput(data)
                         data.results.forEach(function (planet) {
                             output += `
                             <tr>
                                 <td> ${planet.name}</td>
-                                <td> ${planet.diameter} km </td>
+                                <td> ${planet.diameter} </td>
                                 <td> ${planet.climate} </td>
                                 <td> ${planet.terrain} </td>
-                                <td> ${planet.surface_water}% </td>
-                                <td> ${planet.population} people </td>
+                                <td> ${planet.surface_water} </td>
+                                <td> ${planet.population} </td>
                             </tr>
                             `;
                         });
                         document.querySelector('#table tbody').innerHTML = output;
                     })
-                })
-            previousButton.addEventListener("click", e=> {
+            })
+            previousButton.addEventListener("click", e => {
                 dataHandler.getPreviousPlanets()
-                    .then(function(data) {
+                    .then(function (data) {
+                        dataHandler.next = data.next;
+                        dataHandler.previous = data.previous;
                         let output = ''
+                        data = formatOutput(data)
                         data.results.forEach(function (planet) {
                             output += `
                             <tr>
                                 <td> ${planet.name}</td>
-                                <td> ${planet.diameter} km </td>
+                                <td> ${planet.diameter} </td>
                                 <td> ${planet.climate} </td>
                                 <td> ${planet.terrain} </td>
-                                <td> ${planet.surface_water}% </td>
-                                <td> ${planet.population} people </td>
+                                <td> ${planet.surface_water} </td>
+                                <td> ${planet.population} </td>
                             </tr>
                             `;
                         });
                         document.querySelector('#table tbody').innerHTML = output;
                     })
-                })
+            })
         }
     }
 dom.init();
+    function formatOutput(data) {
+        data.results.forEach(function(planet) {
+            if (planet.diameter !== "unknown") {
+                planet.diameter += " km"
+            }
+            if (planet.surface_water !== "unknown") {
+                planet.surface_water += "%"
+            }
+            if (planet.population !== "unknown") {
+                planet.population += " people"
+            }
+        })
+        return data
+    }
 })
