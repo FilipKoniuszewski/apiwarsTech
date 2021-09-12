@@ -14,6 +14,8 @@ window.addEventListener("load", e=> {
                 .then(response => response.json())
                 .then((data) => {
                     let output = '';
+                    document.getElementById("btn-prev").disabled = true;
+                    document.getElementById("btn-next").disabled = false;
                     dataHandler.next = data.next;
                     dataHandler.previous = data.previous;
                     data = formatOutput(data)
@@ -34,20 +36,28 @@ window.addEventListener("load", e=> {
         },
         getNextPlanets: function () {
             if (dataHandler.next != null) {
+                document.getElementById("btn-prev").disabled = false;
                 return fetch(dataHandler.next)
                     .then(response => {
                         const data = response.json();
                         return data;
                     });
             }
+            else {
+                document.getElementById("btn-next").disabled = true;
+            }
         },
         getPreviousPlanets: function () {
             if (dataHandler.previous != null) {
+                document.getElementById("btn-next").disabled = false;
                 return fetch(dataHandler.previous)
                     .then(response => {
                         const data = response.json();
                         return data;
                     });
+            }
+            else {
+                document.getElementById("btn-prev").disabled = true;
             }
         },
         initNextOrPreviousPage: function () {
