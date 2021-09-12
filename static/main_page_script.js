@@ -52,10 +52,13 @@ window.addEventListener("load", e=> {
                         }
                     });
                     document.querySelector('#table tbody').innerHTML = output;
-                    let form = document.getElementById("voteEvent")
-                    form.addEventListener("click", handleSubmit)
+                    let form = document.querySelectorAll("#voteEvent")
+                    form.forEach(elem => {
+                        elem.addEventListener("submit", handleSubmit)
+                        })
                     openModal(data.results)
                 })
+
         },
         getNextPlanets: function () {
             if (dataHandler.next != null) {
@@ -117,7 +120,7 @@ window.addEventListener("load", e=> {
                             }
                             if (document.getElementById("voting") !== null) {
                             output += `
-                            <td><form method="post" action="/vote" class="form">
+                            <td><form method="post" action="/vote" class="form" id="voteEvent">
                             <input name="planet_id" value="${getPlanetId(planet.url)}" hidden>
                             <input name="planet_name" value="${planet.name}" hidden>
                             <button type="submit" class="btn btn-secondary">Vote</button>
@@ -127,6 +130,10 @@ window.addEventListener("load", e=> {
                         }
                         });
                         document.querySelector('#table tbody').innerHTML = output;
+                        let form = document.querySelectorAll("#voteEvent")
+                        form.forEach(elem => {
+                        elem.addEventListener("submit", handleSubmit)
+                        })
                         openModal(data.results)
                     })
             })
@@ -161,7 +168,7 @@ window.addEventListener("load", e=> {
                             }
                             if (document.getElementById("voting") !== null) {
                             output += `
-                            <td><form method="post" action="/vote" class="form">
+                            <td><form method="post" action="/vote" class="form" id="voteEvent"">
                             <input name="planet_id" value="${getPlanetId(planet.url)}" hidden>
                             <input name="planet_name" value="${planet.name}" hidden>
                             <button type="submit" class="btn btn-secondary">Vote</button>
@@ -172,6 +179,10 @@ window.addEventListener("load", e=> {
 
                         });
                         document.querySelector('#table tbody').innerHTML = output;
+                        let form = document.querySelectorAll("#voteEvent")
+                        form.forEach(elem => {
+                        elem.addEventListener("submit", handleSubmit)
+                        })
                         openModal(data.results)
                     })
             })
@@ -279,7 +290,7 @@ dom.init();
                 .then(() => {
                     const modalBody = document.getElementById("modal-body");
                     modalBody.innerHTML = `Voted on planet ${planet_name} successfully.`;
-                    $("#messageModal").modal();
+                    $("#modalVote").modal();
                 });
         }catch (error){
 	        console.log(error);

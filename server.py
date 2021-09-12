@@ -53,12 +53,12 @@ def logout():
     return redirect('/')
 
 
-@app.route("/vote", methods=["POST"])
+@app.route("/vote", methods=["POST", "GET"])
 def vote():
     json = request.get_json()
     planet_id = json["planet_id"]
     planet_name = json["planet_name"]
-    user_id = session.get("user_id")
+    user_id = session.get("id")
     submission_time = datetime.datetime.now()
     data_manager.vote(planet_id, planet_name, user_id, submission_time)
     return redirect("/")

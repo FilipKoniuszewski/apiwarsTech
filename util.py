@@ -1,4 +1,5 @@
 import bcrypt
+import data_manager
 
 
 def hash_password(plain_text_password):
