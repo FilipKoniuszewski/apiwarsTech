@@ -103,13 +103,13 @@ dom.init();
     function formatOutput(data) {
         data.results.forEach(function(planet) {
             if (planet.diameter !== "unknown") {
-                planet.diameter += " km"
+                planet.diameter = planet.diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km"
             }
             if (planet.surface_water !== "unknown") {
                 planet.surface_water += "%"
             }
             if (planet.population !== "unknown") {
-                planet.population += " people"
+                planet.population = planet.population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people"
             }
         })
         return data
