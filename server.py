@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, session
 import connection
 import data_manager, util
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "GoodEveningVietnam"
@@ -50,6 +51,17 @@ def logout():
     session.pop("id", None)
     session.pop("user", None)
     return redirect('/')
+
+
+@app.route("/vote", methods=["POST"])
+def vote():
+    json = request.get_json()
+    planet_id = json["planet_id"]
+    planet_name = json["planet_name"]
+    user_id = session.get("user_id")
+    submission_time = datetime.datetime.now()
+    data_manager.vote(planet_id, planet_name, user_id, submission_time)
+    return redirect("/")
 
 
 if __name__ == "__main__":

@@ -3,7 +3,6 @@ window.addEventListener("load", e=> {
         init: function () {
             dataHandler.getPlanets()
             dataHandler.initNextOrPreviousPage();
-            // dataHandler.displayResidentsModal();
         }
     };
     const dataHandler = {
@@ -34,17 +33,27 @@ window.addEventListener("load", e=> {
                         if (residents === ("No known residents")) {
                             output += `
                             <td> ${residents} </td>
-                            </tr>
                             `;
                         }
                         else {
                             output += `
-                            <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
+                            <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td> 
+                            `;
+                        }
+                        if (document.getElementById("voting") !== null) {
+                            output += `
+                            <td><form method="post" action="/vote" class="form" id="voteEvent">
+                            <input name="planet_id" value="${getPlanetId(planet.url)}" hidden>
+                            <input name="planet_name" value="${planet.name}" hidden>
+                            <button type="submit" class="btn btn-secondary">Vote</button>
+                            </form></td>
                             </tr>
                             `;
                         }
                     });
                     document.querySelector('#table tbody').innerHTML = output;
+                    let form = document.getElementById("voteEvent")
+                    form.addEventListener("click", handleSubmit)
                     openModal(data.results)
                 })
         },
@@ -99,15 +108,23 @@ window.addEventListener("load", e=> {
                             if (residents === ("No known residents")) {
                                 output += `
                                 <td> ${residents} </td>
-                                </tr>
                             `;
                             }
                             else {
                                 output += `
                                 <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
-                                </tr>
                                 `;
                             }
+                            if (document.getElementById("voting") !== null) {
+                            output += `
+                            <td><form method="post" action="/vote" class="form">
+                            <input name="planet_id" value="${getPlanetId(planet.url)}" hidden>
+                            <input name="planet_name" value="${planet.name}" hidden>
+                            <button type="submit" class="btn btn-secondary">Vote</button>
+                            </form></td>
+                            </tr>
+                            `;
+                        }
                         });
                         document.querySelector('#table tbody').innerHTML = output;
                         openModal(data.results)
@@ -135,15 +152,23 @@ window.addEventListener("load", e=> {
                             if (residents === ("No known residents")) {
                                 output += `
                                 <td> ${residents} </td>
-                                </tr>
                             `;
                             }
                             else {
                                 output += `
                                 <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
-                                </tr>
                                 `;
                             }
+                            if (document.getElementById("voting") !== null) {
+                            output += `
+                            <td><form method="post" action="/vote" class="form">
+                            <input name="planet_id" value="${getPlanetId(planet.url)}" hidden>
+                            <input name="planet_name" value="${planet.name}" hidden>
+                            <button type="submit" class="btn btn-secondary">Vote</button>
+                            </form></td>
+                            </tr>
+                            `;
+                        }
 
                         });
                         document.querySelector('#table tbody').innerHTML = output;
@@ -185,15 +210,6 @@ dom.init();
         }
         return data
     }
-    function onLoad(resident) {
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-            return resident
-        }
-        xhttp.open("GET", resident);
-        xhttp.send();
-    }
-
     function openModal(planets) {
         document.querySelectorAll(".residents").forEach(elem => {
             elem.addEventListener("click", e => {
@@ -201,7 +217,6 @@ dom.init();
                 for(let planet of planets) {
                     if (planet.name === elem.dataset.planet) {
                         for (let resident of planet.residents) {
-                            onLoad(resident)
                             fetch(resident)
                                 .then(response => response.json())
                                 .then((data) => {
@@ -230,5 +245,44 @@ dom.init();
             })
 
         })
+    }
+    function getPlanetId(url) {
+        let urlArray = url.split("/");
+        return urlArray[5];
+    }
+    async function postFormDataAsJson({url, formData}){
+        const plainFormData = Object.fromEntries(formData.entries());
+	    const formDataJsonString = JSON.stringify(plainFormData);
+	    const fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: formDataJsonString,
+        };
+	    const response = await fetch(url, fetchOptions);
+	    if (!response.ok) {
+		    const errorMessage = await response.text();
+		    throw new Error(errorMessage);
+	    }
+	    return response.text()
+    }
+    async function handleSubmit(e){
+        e.preventDefault();
+        const form = e.currentTarget;
+	    const url = form.action;
+	    try {
+            const formData = new FormData(form);
+            const planet_name = formData.get("planet_name");
+            await postFormDataAsJson({url, formData})
+                .then(() => {
+                    const modalBody = document.getElementById("modal-body");
+                    modalBody.innerHTML = `Voted on planet ${planet_name} successfully.`;
+                    $("#messageModal").modal();
+                });
+        }catch (error){
+	        console.log(error);
+        }
     }
 })

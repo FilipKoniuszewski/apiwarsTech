@@ -41,3 +41,12 @@ def get_password_by_email(cursor, email):
     cursor.execute(query)
     result = cursor.fetchone()
     return result
+
+
+@connection.connection_handler
+def vote(cursor, planet_id, planet_name, user_id, submission_time):
+    query = f"""INSERT INTO planet_votes(planet_id,planet_name,user_id,submission_time)
+                VALUES  ('{planet_id}', '{planet_name}',{user_id},{submission_time})  
+            """
+    return cursor.execute(query)
+

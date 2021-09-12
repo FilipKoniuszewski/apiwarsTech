@@ -53,6 +53,9 @@
         <th scope="col">Surface Water Percentage</th>
         <th scope="col">Population</th>
         <th scope="col">Residents</th>
+        {% if "user" in session %}
+            <th id="voting">Votes</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
