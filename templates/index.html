@@ -4,6 +4,42 @@
     <script src="{{ url_for('static', filename='main_page_script.js') }}"></script>
 {% endblock %}
 {% block content %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content bg-dark">
+          <div class="modal-header border-bottom-0 text-white">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="table-responsive">
+              <table class="table table-striped table-light">
+                  <thead class="thead-dark">
+                  <tr>
+                      <th>Name</th>
+                      <th>Height</th>
+                      <th>Mass</th>
+                      <th>Hair color</th>
+                      <th>Skin Color</th>
+                      <th>Eye Color</th>
+                      <th>Birth year</th>
+                      <th>Gender</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+                </div>
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <h1 class="text-light" id="main-page-header">Star Wars Universe Planet</h1>
 <button id="btn-prev" class="btn btn-primary">Previous</button>
 <button id="btn-next" class="btn btn-primary">Next</button>
@@ -16,6 +52,7 @@
         <th scope="col">Terrain</th>
         <th scope="col">Surface Water Percentage</th>
         <th scope="col">Population</th>
+        <th scope="col">Residents</th>
     </tr>
     </thead>
     <tbody>

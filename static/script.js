@@ -10,7 +10,6 @@ window.addEventListener("load", e=> {
         if (usernameInput.value && passwordInput.value) {
             return;
         } else {
-            console.log("TY KURWO JEBANA")
             modalText.innerHTML = "Please, fill in both fields.";
         }
         $(modal).modal()

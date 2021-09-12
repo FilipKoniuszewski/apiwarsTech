@@ -3,10 +3,10 @@ window.addEventListener("load", e=> {
         init: function () {
             dataHandler.getPlanets()
             dataHandler.initNextOrPreviousPage();
+            // dataHandler.displayResidentsModal();
         }
     };
     const dataHandler = {
-        // baseUrl: 'https://swapi.dev/api/',
         next: null,
         previous: null,
         getPlanets: function () {
@@ -20,6 +20,8 @@ window.addEventListener("load", e=> {
                     dataHandler.previous = data.previous;
                     data = formatOutput(data)
                     data.results.forEach(function (planet) {
+                        let residents = planet.residents
+                        residents = dataHandler.getPlanetResidentsCount(residents)
                         output += `
                     <tr>
                         <td> ${planet.name}</td>
@@ -28,10 +30,22 @@ window.addEventListener("load", e=> {
                         <td> ${planet.terrain} </td>
                         <td> ${planet.surface_water} </td>
                         <td> ${planet.population} </td>
-                    </tr>
                     `;
+                        if (residents === ("No known residents")) {
+                            output += `
+                            <td> ${residents} </td>
+                            </tr>
+                            `;
+                        }
+                        else {
+                            output += `
+                            <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
+                            </tr>
+                            `;
+                        }
                     });
                     document.querySelector('#table tbody').innerHTML = output;
+                    openModal(data.results)
                 })
         },
         getNextPlanets: function () {
@@ -71,6 +85,8 @@ window.addEventListener("load", e=> {
                         let output = ''
                         data = formatOutput(data)
                         data.results.forEach(function (planet) {
+                            let residents = planet.residents
+                            residents = dataHandler.getPlanetResidentsCount(residents)
                             output += `
                             <tr>
                                 <td> ${planet.name}</td>
@@ -79,10 +95,22 @@ window.addEventListener("load", e=> {
                                 <td> ${planet.terrain} </td>
                                 <td> ${planet.surface_water} </td>
                                 <td> ${planet.population} </td>
-                            </tr>
                             `;
+                            if (residents === ("No known residents")) {
+                                output += `
+                                <td> ${residents} </td>
+                                </tr>
+                            `;
+                            }
+                            else {
+                                output += `
+                                <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
+                                </tr>
+                                `;
+                            }
                         });
                         document.querySelector('#table tbody').innerHTML = output;
+                        openModal(data.results)
                     })
             })
             previousButton.addEventListener("click", e => {
@@ -93,6 +121,8 @@ window.addEventListener("load", e=> {
                         let output = ''
                         data = formatOutput(data)
                         data.results.forEach(function (planet) {
+                            let residents = planet.residents
+                            residents = dataHandler.getPlanetResidentsCount(residents)
                             output += `
                             <tr>
                                 <td> ${planet.name}</td>
@@ -101,12 +131,34 @@ window.addEventListener("load", e=> {
                                 <td> ${planet.terrain} </td>
                                 <td> ${planet.surface_water} </td>
                                 <td> ${planet.population} </td>
-                            </tr>
                             `;
+                            if (residents === ("No known residents")) {
+                                output += `
+                                <td> ${residents} </td>
+                                </tr>
+                            `;
+                            }
+                            else {
+                                output += `
+                                <td><button type="button" class="btn btn-secondary residents" id="residents" data-planet="${planet.name}">${residents}</button></td>
+                                </tr>
+                                `;
+                            }
+
                         });
                         document.querySelector('#table tbody').innerHTML = output;
+                        openModal(data.results)
                     })
             })
+
+        },
+        getPlanetResidentsCount: function (residents) {
+            if (!(residents.length === 0)) {
+                return residents.length + " resident(s)"
+            }
+            else {
+                return "No known residents"
+            }
         }
     }
 dom.init();
@@ -123,5 +175,60 @@ dom.init();
             }
         })
         return data
+    }
+    function formatModalOutput(data) {
+        if (!(data.mass === "unknown")) {
+            data.mass += "kg"
+        }
+        if (!(data.height === "unknown")) {
+            data.height += "m"
+        }
+        return data
+    }
+    function onLoad(resident) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            return resident
+        }
+        xhttp.open("GET", resident);
+        xhttp.send();
+    }
+
+    function openModal(planets) {
+        document.querySelectorAll(".residents").forEach(elem => {
+            elem.addEventListener("click", e => {
+                let output = ''
+                for(let planet of planets) {
+                    if (planet.name === elem.dataset.planet) {
+                        for (let resident of planet.residents) {
+                            onLoad(resident)
+                            fetch(resident)
+                                .then(response => response.json())
+                                .then((data) => {
+                                    data = formatModalOutput(data)
+                                    output += `
+                                    <tr>
+                                        <td> ${data.name} </td>
+                                        <td> ${data.height} </td>
+                                        <td> ${data.mass} </td>
+                                        <td> ${data.hair_color} </td>
+                                        <td> ${data.skin_color} </td>
+                                        <td> ${data.eye_color} </td>
+                                        <td> ${data.birth_year} </td>
+                                        <td> ${data.gender} </td>
+                                    </tr>
+                                    `;
+                                    document.querySelector('#myModal tbody').innerHTML = output;
+                                    document.querySelector('#myModal .modal-title').innerHTML = "Residents of " + planet.name;
+                            })
+                        }
+                        const modal = document.querySelector("#myModal");
+                        $(modal).modal()
+                        e.preventDefault();
+                    }
+                }
+            })
+
+        })
     }
 })
