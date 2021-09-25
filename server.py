@@ -2,8 +2,12 @@ from flask import Flask, render_template, redirect, request, session
 import connection
 import data_manager, util
 import datetime
+import os
+import psycopg2
 
-app = Flask(__name__)
+# connection_string = os.environ.get('DATABASE_URL')
+# connection = psycopg2.connect(connection_string)
+
 app.secret_key = "GoodEveningVietnam"
 
 
@@ -64,5 +68,3 @@ def vote():
     return redirect("/")
 
 
-if __name__ == "__main__":
-    app.run()
