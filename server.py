@@ -7,7 +7,7 @@ import psycopg2
 
 # connection_string = os.environ.get('DATABASE_URL')
 # connection = psycopg2.connect(connection_string)
-
+app = Flask(__name__)
 app.secret_key = "GoodEveningVietnam"
 
 
