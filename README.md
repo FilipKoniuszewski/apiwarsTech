@@ -12,7 +12,7 @@ Your task is to create a web application that shows data about the Star Wars
 universe, stores visitor preferences with cookies, and handles user login with
 sessions.
 
-## What did I learn from this project:
+## What I learned?
 
 - Create a Flask backend project.
 - Use routes with Flask.
