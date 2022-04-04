@@ -1,5 +1,7 @@
 # API Wars
 
+- Codecool Project
+
 ## Story
 
 Because you are so awesome, a golden humanoid droid wants to meet you in the nearest Kantina.
@@ -22,7 +24,7 @@ sessions.
 
 ## Result of this project can be found in below link :)
 
-## https://apiwarskoniusz.herokuapp.com/
+- https://apiwarskoniusz.herokuapp.com/
 
 
 
